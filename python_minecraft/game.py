@@ -1,23 +1,43 @@
-from ursina import * 
+# we have installed packages, so these work to import the necessary modules and classes for our game.
+# pip3 install ursina
+
+# from ursina packages, grab them all for use in this file
+from ursina import *
+#from the ursina.prefabs.first_person_controller module, grab the FirstPersonController class for use in this file
+# the folders and packages are always lowercase, but the classes and functions are always uppercase, so we can easily tell them apart.
 from ursina.prefabs.first_person_controller import FirstPersonController 
 
+# call the Ursina class constructor to create our game window and set up 
+# the game environment. We store the instance of the Ursina class in a variable called 'app' so we can run the game later with app.run()
 app = Ursina()
 
 # load all assets
+#dictionary {key: value}
+#dictionary {int: texture class object}  
+#remember that the key must be a native type, usually integer or string, 
+# and the value can be any type, including a texture object created by load_texture()
+# load_texture(name: str, 
+#               wrap_mode: str = 'repeat', 
+#               filter_mode: str = 'nearest', 
+#               anisotropic_level: int = 1, 
+#               generate_mipmaps: bool = False) -> Texture class returned
 textures = {
     1: load_texture("Assets/Textures/Grass.png"),
     2: load_texture("Assets/Textures/Dirt.png"),
     3: load_texture("Assets/Textures/Brick.png"),
     4: load_texture("Assets/Textures/Wood.png"),
-    5: load_texture("Assets/Textures/Stone.png"),
-    
+    5: load_texture("Assets/Textures/Stone.png"),   
 }
 
+# textture for sky background, we will use this for our skybox
 sky_bg = load_texture("Assets/Textures/Sky.png")
+# load sound via audio class object, we can play this sound whenever we want by calling the play() method on the build_sound object
 build_sound = Audio("Assets/SFX/Build_Sound.wav", loop=False, autoplay=False)
 
+# this variable will keep track of which block type we have currently selected for building
 block_pick = 1
 
+# the Block class will represent each block in our game world. It inherits from the Button class, which allows us to easily detect when the player clicks on a block to break it or place a new block next to it.
 class Block(Button):
     def __init__(self, position=(0,0,0), texture=textures[1], breakable=True):
         super().__init__(
@@ -26,7 +46,7 @@ class Block(Button):
             model="Assets/Models/Block.obj",
             origin_y=0.5,
             texture=texture,
-            color=color.color(0,0,random.uniform(0.9, 1)),
+            color=color.Color(0,0,random.uniform(0.9, 1), 1),
             highlight_color=color.light_gray,
             scale=0.5
         )
